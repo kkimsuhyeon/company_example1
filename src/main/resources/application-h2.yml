@@ -1,0 +1,24 @@
+spring:
+  application.name: mybnb
+  datasource:
+#    driver-class-name: org.h2.Driver
+    #    url: jdbc:h2:mem:mybnb
+    #    url: jdbc:h2:tcp://localhost/~/scheduler
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:h2:tcp://localhost/~/scheduler
+    username: sa
+    password:
+
+  sql:
+    init:
+      schema-locations: classpath:/data/schema_h2.sql
+      data-locations: classpath:/data/data.sql
+      mode: always
+
+  h2.console.enabled: true
+
+logging.level.org.hibernate.orm.jdbc.bind: trace
+
+mybatis:
+  config-location: classpath:/config/mybatis-config-h2.xml
+  mapper-locations: classpath:mybatis/mapper/*/*.xml
