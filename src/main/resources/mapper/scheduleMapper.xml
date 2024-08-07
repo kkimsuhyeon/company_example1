@@ -2,8 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.scheduler.repository.ScheduleMapper">
 
-    <insert id="insertSchedule" parameterType="demo.scheduler.domain.Schedule">
-        INSERT INTO schedule (title, content, color)
-        VALUES (#{title}, #{content}, #{color})
+    <select id="selectSchedules" resultType="demo.scheduler.domain.Schedule"
+            parameterType="demo.scheduler.dto.common.ScheduleFilterDto">
+        SELECT *
+        FROM schedule
+        <where>
+            <if test="month != null and month != 0">
+                AND (TO_CHAR(start_time, 'MM') = #{month} OR TO_CHAR(end_time, 'MM') = #{month})
+                <if test="weekly != null and weekly != 0">
+                    AND (TO_CHAR(start_time, 'IW') = #{weekly} OR TO_CHAR(end_time, 'IW') = #{weekly})
+                </if>
+            </if>
+        </where>
+        ORDER BY start_time
+    </select>
+
+    <select id="selectScheduleById" resultType="demo.scheduler.domain.Schedule" parameterType="Long">
+        SELECT *
+        FROM schedule
+        WHERE schedule_id = ${id}
+    </select>
+
+    <insert id="insertSchedule" parameterType="demo.scheduler.domain.Schedule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schedule (title, content, color, repeatUnit, alertTime)
+        VALUES (#{title}, #{content}, #{color}, #{repeatUnit}, #{alertTime})
+        RETURNING *
     </insert>
+
+    <update id="updateSchedule" parameterType="demo.scheduler.domain.Schedule">
+        UPDATE schedule
+        SET ( title, content, color, repeatUnit, alertTime )
+        = ( #{title}, #{content}, #{color}, #{repeatUnit}, #{alertTime} )
+        WHERE schedule_id = ${id}
+    </update>
+
 </mapper>

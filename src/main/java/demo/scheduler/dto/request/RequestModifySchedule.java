@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @ToString
-public class RequestCreateSchedule {
+public class RequestModifySchedule {
 
     @NotNull
     private String title;
@@ -37,9 +37,10 @@ public class RequestCreateSchedule {
 
     private MultipartFile files;
 
-    public ScheduleDto of() {
+    public ScheduleDto of(Long id) {
         return new ScheduleDto
                 .Builder(title, color, startDateTime, endDateTime)
+                .id(id)
                 .content(content)
                 .repeatUnit(repeatUnit)
                 .alertTime(alertTime)
