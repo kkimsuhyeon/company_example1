@@ -39,8 +39,11 @@ public class ScheduleService {
     }
 
     public ScheduleDto createSchedule(ScheduleDto dto) {
-        Schedule schedule = scheduleMapper.insertSchedule(dto.toEntity());
-        System.out.println(schedule);
+
+        Schedule entity = dto.toEntity();
+
+        scheduleMapper.insertSchedule(entity);
+        System.out.println(entity.getId());
         return dto;
     }
 

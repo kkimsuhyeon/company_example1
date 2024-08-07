@@ -41,7 +41,7 @@ public class ScheduleController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createSchedule(@RequestBody @Valid RequestCreateSchedule request) {
+    public ResponseEntity<?> createSchedule(@ModelAttribute @Valid RequestCreateSchedule request) {
         scheduleService.createSchedule(request.of());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

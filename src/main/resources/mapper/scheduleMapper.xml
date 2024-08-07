@@ -23,16 +23,18 @@
         WHERE schedule_id = ${id}
     </select>
 
-    <insert id="insertSchedule" parameterType="demo.scheduler.domain.Schedule" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO schedule (title, content, color, repeatUnit, alertTime)
-        VALUES (#{title}, #{content}, #{color}, #{repeatUnit}, #{alertTime})
-        RETURNING *
+    <insert id="insertSchedule" parameterType="demo.scheduler.domain.Schedule" >
+        INSERT INTO schedule (title, content, color, repeat_unit, alert_time, start_time, end_time)
+        VALUES (#{title}, #{content}, #{color}, #{repeatUnit}, #{alertTime}, #{startDateTime}, #{endDateTime})
+        <selectKey keyProperty="id" resultType="Long" order="AFTER">
+            SELECT MAX(schedule_id) FROM schedule
+        </selectKey>
     </insert>
 
     <update id="updateSchedule" parameterType="demo.scheduler.domain.Schedule">
         UPDATE schedule
         SET ( title, content, color, repeatUnit, alertTime )
-        = ( #{title}, #{content}, #{color}, #{repeatUnit}, #{alertTime} )
+                = (#{title}, #{content}, #{color}, #{repeatUnit}, #{alertTime})
         WHERE schedule_id = ${id}
     </update>
 

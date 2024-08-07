@@ -14,7 +14,7 @@ public interface ScheduleMapper {
 
     public Optional<Schedule> selectScheduleById(Long id);
 
-    public Schedule insertSchedule(Schedule schedule);
+    public Long insertSchedule(Schedule schedule);
 
     public void updateSchedule(Schedule schedule);
 }
