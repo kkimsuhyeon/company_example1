@@ -2,7 +2,7 @@ package demo.scheduler.dto.response;
 
 import demo.scheduler.domain.constant.Color;
 import demo.scheduler.domain.constant.RepeatUnit;
-import demo.scheduler.dto.common.ScheduleDto;
+import demo.scheduler.dto.common.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -31,7 +31,7 @@ public class ResponseScheduleDetail {
 
     private LocalDateTime endDateTime;
 
-    public static ResponseScheduleDetail from(ScheduleDto dto) {
+    public static ResponseScheduleDetail from(Schedule dto) {
         return new ResponseScheduleDetail(
                 dto.getId(),
                 dto.getTitle(),

@@ -1,13 +1,12 @@
 package demo.scheduler.dto.response;
 
 import demo.scheduler.domain.constant.Color;
-import demo.scheduler.dto.common.ScheduleDto;
+import demo.scheduler.dto.common.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-
 
 @AllArgsConstructor
 @Getter
@@ -24,7 +23,12 @@ public class ResponseScheduleItem {
 
     private LocalDateTime endDateTime;
 
-    public static ResponseScheduleItem from(ScheduleDto dto) {
-        return new ResponseScheduleItem(dto.getId(), dto.getTitle(), dto.getColor(), dto.getStartDateTime(), dto.getEndDateTime());
+    public static ResponseScheduleItem from(Schedule dto) {
+        return new ResponseScheduleItem(
+                dto.getId(),
+                dto.getTitle(),
+                dto.getColor(),
+                dto.getStartDateTime(),
+                dto.getEndDateTime());
     }
 }

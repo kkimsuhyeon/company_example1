@@ -2,7 +2,7 @@ package demo.scheduler.dto.request;
 
 import demo.scheduler.domain.constant.Color;
 import demo.scheduler.domain.constant.RepeatUnit;
-import demo.scheduler.dto.common.ScheduleDto;
+import demo.scheduler.dto.common.Schedule;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-@AllArgsConstructor
 @Getter
 @ToString
+@AllArgsConstructor
 public class RequestCreateSchedule {
 
     @NotNull
@@ -39,15 +39,16 @@ public class RequestCreateSchedule {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endDateTime;
 
-    private List<MultipartFile> files;
-
-    public ScheduleDto of() {
-        return new ScheduleDto
-                .Builder(title, color, startDateTime, endDateTime)
+    public Schedule toDto() {
+        return Schedule
+                .builder()
+                .title(title)
                 .content(content)
+                .color(color)
                 .repeatUnit(repeatUnit)
                 .alertTime(alertTime)
-                .files(files)
+                .startDateTime(startDateTime)
+                .endDateTime(endDateTime)
                 .build();
     }
 }

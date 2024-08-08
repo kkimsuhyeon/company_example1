@@ -1,8 +1,8 @@
 package demo.scheduler.controller;
 
-import demo.scheduler.domain.UploadedFile;
-import demo.scheduler.dto.request.RequestUploadFile;
-import demo.scheduler.service.UploadedFileService;
+import demo.scheduler.dto.common.Attachment;
+import demo.scheduler.dto.request.RequestUploadAttachment;
+import demo.scheduler.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -15,31 +15,29 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/api/files")
-public class UploadedFileController {
+@RequestMapping("/api/attachment")
+public class AttachmentController {
 
-    private final UploadedFileService uploadedFileService;
+    private final AttachmentService attachmentService;
 
     @Autowired
-    public UploadedFileController(UploadedFileService uploadedFileService) {
-        this.uploadedFileService = uploadedFileService;
+    public AttachmentController(AttachmentService attachmentService) {
+        this.attachmentService = attachmentService;
     }
 
     @PostMapping
-    public ResponseEntity<?> uploadFile(RequestUploadFile request) {
-        uploadedFileService.uploadFiles(request.getFiles(), 1L);
+    public ResponseEntity<?> uploadAttachment(RequestUploadAttachment request) {
+        attachmentService.uploadAttachment(request, 1L);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{fileId}")
     public ResponseEntity<?> downloadFile(@PathVariable(value = "fileId") Long fileId) {
         try {
-            UploadedFile uploadedFile = uploadedFileService.downloadFile(fileId);
+            Attachment attachment = attachmentService.downloadFile(fileId);
+            UrlResource urlResource = new UrlResource("file:" + attachment.getPath());
 
-
-            UrlResource urlResource = new UrlResource("file:" + uploadedFile.getPath());
-
-            String encodedUploadFileName = UriUtils.encode(uploadedFile.getOriginName(), StandardCharsets.UTF_8);
+            String encodedUploadFileName = UriUtils.encode(attachment.getOriginName(), StandardCharsets.UTF_8);
             String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
 
             return ResponseEntity.ok()

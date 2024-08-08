@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class UploadedFile {
+public class Attachment {
     private Long id;
     private String originName;
     private String storedName;

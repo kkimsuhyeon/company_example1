@@ -1,10 +1,10 @@
 package demo.scheduler.controller;
 
-import demo.scheduler.dto.common.ScheduleDto;
 import demo.scheduler.dto.request.RequestCreateSchedule;
 import demo.scheduler.dto.request.RequestModifySchedule;
+import demo.scheduler.dto.request.RequestUploadAttachment;
 import demo.scheduler.dto.response.ResponseScheduleItem;
-import demo.scheduler.dto.schedule.ScheduleWithFile;
+import demo.scheduler.dto.response.ResponseScheduleWithAttachment;
 import demo.scheduler.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,27 +27,31 @@ public class ScheduleController {
             @RequestParam(required = false) Integer month,
             @RequestParam(required = false) Integer weekly
     ) {
-        List<ScheduleDto> schedules = scheduleService.getSchedules(month, weekly);
-        List<ResponseScheduleItem> result = schedules.stream().map(ResponseScheduleItem::from).collect(Collectors.toList());
-
+        List<ResponseScheduleItem> result = scheduleService.getSchedules(month, weekly);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{scheduleId}")
     public ResponseEntity<?> getSchedule(@PathVariable(value = "scheduleId") Long id) {
-        ScheduleWithFile schedule = scheduleService.getScheduleById(id);
+        ResponseScheduleWithAttachment schedule = scheduleService.getScheduleById(id);
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createSchedule(@ModelAttribute @Valid RequestCreateSchedule request) {
-        scheduleService.createSchedule(request.of());
+    public ResponseEntity<?> createSchedule(
+            @RequestParam @Valid RequestCreateSchedule requestCreateSchedule,
+            @RequestParam(required = false) RequestUploadAttachment requestUploadAttachment) {
+        scheduleService.createSchedule(requestCreateSchedule, requestUploadAttachment);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
     @PutMapping(value = "/{scheduleId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> modifySchedule(@PathVariable(value = "scheduleId") Long id, @ModelAttribute @Valid RequestModifySchedule request) {
-        scheduleService.modifySchedule(id, request.of(id));
+    public ResponseEntity<?> modifySchedule(
+            @PathVariable(value = "scheduleId") Long id,
+            @ModelAttribute @Valid RequestModifySchedule requestModifySchedule,
+            @ModelAttribute RequestUploadAttachment requestUploadAttachment) {
+        scheduleService.modifySchedule(id, requestModifySchedule, requestUploadAttachment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

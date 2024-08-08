@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.scheduler.repository.AttachmentMapper">
+
+    <insert id="insertAttachment" parameterType="demo.scheduler.dto.common.Attachment">
+        INSERT INTO attachment (origin_name, stored_name, path, schedule_id)
+        VALUES (#{originName}, #{storedName}, #{path}, #{scheduleId})
+    </insert>
+
+    <select id="selectAttachmentById" parameterType="Long" resultType="demo.scheduler.dto.common.Attachment">
+        SELECT attachment_id, origin_name, stored_name, path, schedule_id
+        FROM attachment
+        WHERE attachment_id = ${id}
+    </select>
+
+</mapper>

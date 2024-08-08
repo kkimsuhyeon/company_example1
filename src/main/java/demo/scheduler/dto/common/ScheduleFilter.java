@@ -9,13 +9,15 @@ import java.util.Locale;
 
 @Getter
 @ToString
-public class ScheduleFilterDto {
+public class ScheduleFilter {
 
-    private Integer month;
-    private Integer weekly;
+    private static final int YEAR = 2024;
+
+    private final Integer month;
+    private final Integer weekly;
     private Integer totalWeekly;
 
-    public ScheduleFilterDto(Integer month, Integer weekly) {
+    public ScheduleFilter(Integer month, Integer weekly) {
         this.month = month;
         this.weekly = weekly;
 
@@ -24,18 +26,14 @@ public class ScheduleFilterDto {
         }
     }
 
-
     public static Integer getTotalWeekly(Integer month, Integer weekly) {
 
-        int year = 2024;
-
-        LocalDate startOfMarch = LocalDate.of(year, month, 1);
+        LocalDate startOfMarch = LocalDate.of(YEAR, month, 1);
         LocalDate startOfThirdWeek = startOfMarch.plusWeeks(weekly - 1);
 
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        int weekNumber = startOfThirdWeek.get(weekFields.weekOfWeekBasedYear());
 
-        return weekNumber;
+        return startOfThirdWeek.get(weekFields.weekOfWeekBasedYear());
     }
 
 }

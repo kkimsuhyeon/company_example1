@@ -1,35 +1,39 @@
 package demo.scheduler.service;
 
-import demo.scheduler.domain.UploadedFile;
-import demo.scheduler.dto.common.UploadedFileDto;
-import demo.scheduler.repository.UploadedFileMapper;
+import demo.scheduler.dto.common.Attachment;
+import demo.scheduler.dto.request.RequestUploadAttachment;
+import demo.scheduler.repository.AttachmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.UUID;
 
 @Service
-public class UploadedFileService {
+public class AttachmentService {
 
-    private final UploadedFileMapper uploadedFileMapper;
+    private final AttachmentMapper uploadedFileMapper;
 
     @Autowired
-    public UploadedFileService(UploadedFileMapper uploadedFileMapper) {
+    public AttachmentService(AttachmentMapper uploadedFileMapper) {
         this.uploadedFileMapper = uploadedFileMapper;
     }
 
-    public void uploadFiles(List<MultipartFile> files, Long scheduleId) {
-        files.forEach((file) -> uploadFile(file, scheduleId));
+    public void uploadAttachment(RequestUploadAttachment request, Long scheduleId) {
+        if (!request.getFiles().isEmpty()) {
+            request.getFiles().forEach((file) -> uploadFile(file, scheduleId));
+        }
     }
 
-    public void uploadFile(MultipartFile file, Long scheduleId) {
+    public Attachment downloadFile(Long fileId) {
+        return uploadedFileMapper.selectAttachmentById(fileId);
+    }
+
+    private void uploadFile(MultipartFile file, Long scheduleId) {
         String folderPath = makeFolder();
 
         String originName = file.getOriginalFilename();
@@ -37,24 +41,20 @@ public class UploadedFileService {
         String storedName = uuid + "_" + originName;
         String filePath = folderPath + File.separator + storedName;
 
-        UploadedFileDto uploadedFileDto = new UploadedFileDto
-                .Builder(originName, storedName, filePath, scheduleId)
-                .build();
-
         try {
             Path savePath = Paths.get(filePath);
             file.transferTo(savePath);
-            uploadedFileMapper.insertFile(uploadedFileDto.toEntity());
+
+            uploadedFileMapper.insertAttachment(Attachment.builder()
+                    .originName(originName)
+                    .storedName(storedName)
+                    .path(filePath)
+                    .scheduleId(scheduleId)
+                    .build());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public UploadedFile downloadFile(Long fileId) throws MalformedURLException {
-        UploadedFile uploadedFile = uploadedFileMapper.selectFileById(fileId);
-        return uploadedFile;
-
     }
 
     private String makeFolder() {

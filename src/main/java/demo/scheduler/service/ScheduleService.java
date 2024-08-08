@@ -1,9 +1,12 @@
 package demo.scheduler.service;
 
-import demo.scheduler.domain.Schedule;
-import demo.scheduler.dto.common.ScheduleDto;
-import demo.scheduler.dto.common.ScheduleFilterDto;
-import demo.scheduler.dto.schedule.ScheduleWithFile;
+import demo.scheduler.dto.common.Schedule;
+import demo.scheduler.dto.common.ScheduleFilter;
+import demo.scheduler.dto.request.RequestCreateSchedule;
+import demo.scheduler.dto.request.RequestModifySchedule;
+import demo.scheduler.dto.request.RequestUploadAttachment;
+import demo.scheduler.dto.response.ResponseScheduleItem;
+import demo.scheduler.dto.response.ResponseScheduleWithAttachment;
 import demo.scheduler.repository.ScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,49 +18,46 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     ScheduleMapper scheduleMapper;
-    UploadedFileService uploadedFileService;
+    AttachmentService attachmentService;
 
     @Autowired
-    public ScheduleService(ScheduleMapper scheduleMapper, UploadedFileService uploadedFileService) {
+    public ScheduleService(ScheduleMapper scheduleMapper, AttachmentService attachmentService) {
         this.scheduleMapper = scheduleMapper;
-        this.uploadedFileService = uploadedFileService;
+        this.attachmentService = attachmentService;
     }
 
-    public List<ScheduleDto> getSchedules(Integer month, Integer weekly) {
+    public List<ResponseScheduleItem> getSchedules(Integer month, Integer weekly) {
 
-        ScheduleFilterDto filterDto = new ScheduleFilterDto(month, weekly);
-
+        ScheduleFilter filterDto = new ScheduleFilter(month, weekly);
         List<Schedule> result = scheduleMapper.selectSchedules(filterDto);
 
-        return result
-                .stream()
-                .map(ScheduleDto::fromEntity)
+        return result.stream()
+                .map(ResponseScheduleItem::from)
                 .collect(Collectors.toList());
     }
 
-    public ScheduleWithFile getScheduleById(Long id) {
-        return scheduleMapper.selectScheduleById(id)
-                .orElseThrow(() -> new IllegalArgumentException("에러 발생"));
+    public ResponseScheduleWithAttachment getScheduleById(Long id) {
+        return ResponseScheduleWithAttachment.from(scheduleMapper.selectScheduleById(id));
     }
 
-    public ScheduleDto createSchedule(ScheduleDto dto) {
+    public void createSchedule(RequestCreateSchedule requestCreateSchedule, RequestUploadAttachment requestUploadFile) {
+        Schedule dto = requestCreateSchedule.toDto();
+        scheduleMapper.insertSchedule(dto);
 
-        Schedule entity = dto.toEntity();
-        scheduleMapper.insertSchedule(entity);
-
-        if (dto.getFiles() != null) {
-            uploadedFileService.uploadFiles(dto.getFiles(), entity.getId());
+        if (!requestUploadFile.getFiles().isEmpty()) {
+            attachmentService.uploadAttachment(requestUploadFile, dto.getId());
         }
-        return dto;
     }
 
-    public ScheduleDto modifySchedule(Long id, ScheduleDto dto) {
-        if (scheduleMapper.selectScheduleById(id).isPresent()) {
-            scheduleMapper.updateSchedule(dto.toEntity());
+    public void modifySchedule(Long id, RequestModifySchedule requestModifySchedule, RequestUploadAttachment requestUploadFile) {
+        if (!scheduleMapper.selectScheduleById(id).isEmpty()) {
+            Schedule dto = requestModifySchedule.toDto(id);
+            scheduleMapper.updateSchedule(dto);
+            if (!requestUploadFile.getFiles().isEmpty()) {
+                attachmentService.uploadAttachment(requestUploadFile, dto.getId());
+            }
         } else {
             throw new IllegalArgumentException("??");
         }
-
-        return dto;
     }
 }

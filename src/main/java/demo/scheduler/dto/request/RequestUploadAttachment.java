@@ -1,6 +1,6 @@
 package demo.scheduler.dto.request;
 
-import demo.scheduler.dto.common.UploadedFileDto;
+import demo.scheduler.dto.common.Attachment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,16 +13,21 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @ToString
-public class RequestUploadFile {
+public class RequestUploadAttachment {
 
     private List<MultipartFile> files;
 
-    public List<UploadedFileDto> toDto(String folderPath, Long scheduleId) {
+    public List<Attachment> toDto(String path, Long scheduleId) {
         return files.stream().map((file) -> {
             String originName = file.getOriginalFilename();
             String storedName = makeStoredName(originName);
 
-            return new UploadedFileDto.Builder(originName, storedName, folderPath, scheduleId).build();
+            return Attachment.builder()
+                    .originName(originName)
+                    .storedName(storedName)
+                    .path(path)
+                    .scheduleId(scheduleId)
+                    .build();
         }).collect(Collectors.toList());
     }
 

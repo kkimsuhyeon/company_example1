@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS schedule;
-DROP TABLE IF EXISTS file;
+DROP TABLE IF EXISTS attachment;
 
 CREATE TABLE schedule
 (
@@ -13,9 +13,9 @@ CREATE TABLE schedule
     end_time TIMESTAMP
  );
 
- CREATE TABLE file
+ CREATE TABLE attachment
  (
-    file_id SERIAL PRIMARY KEY,
+    attachment_id SERIAL PRIMARY KEY,
     origin_name varchar(255) NOT NULL,
     stored_name varchar(255) NOT NULL,
     path varchar(255) NOT NULL,

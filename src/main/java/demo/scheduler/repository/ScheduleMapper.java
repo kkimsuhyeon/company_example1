@@ -1,21 +1,20 @@
 package demo.scheduler.repository;
 
-import demo.scheduler.domain.Schedule;
-import demo.scheduler.dto.common.ScheduleFilterDto;
-import demo.scheduler.dto.schedule.ScheduleWithFile;
+import demo.scheduler.dto.common.Schedule;
+import demo.scheduler.dto.common.ScheduleFilter;
+import demo.scheduler.dto.common.ScheduleWithAttachment;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @Mapper
 public interface ScheduleMapper {
 
-    public List<Schedule> selectSchedules(ScheduleFilterDto dto);
+    public List<Schedule> selectSchedules(ScheduleFilter dto);
 
-    public Optional<ScheduleWithFile> selectScheduleById(Long id);
+    public List<ScheduleWithAttachment> selectScheduleById(Long id);
 
-    public Long insertSchedule(Schedule schedule);
+    public void insertSchedule(Schedule schedule);
 
     public void updateSchedule(Schedule schedule);
 }
