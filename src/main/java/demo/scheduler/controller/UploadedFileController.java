@@ -1,7 +1,6 @@
 package demo.scheduler.controller;
 
 import demo.scheduler.domain.UploadedFile;
-import demo.scheduler.dto.common.UploadedFileDto;
 import demo.scheduler.dto.request.RequestUploadFile;
 import demo.scheduler.service.UploadedFileService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,6 @@ package demo.scheduler.controller;
 import demo.scheduler.dto.common.ScheduleDto;
 import demo.scheduler.dto.request.RequestCreateSchedule;
 import demo.scheduler.dto.request.RequestModifySchedule;
-import demo.scheduler.dto.response.ResponseScheduleDetail;
 import demo.scheduler.dto.response.ResponseScheduleItem;
 import demo.scheduler.dto.schedule.ScheduleWithFile;
 import demo.scheduler.service.ScheduleService;

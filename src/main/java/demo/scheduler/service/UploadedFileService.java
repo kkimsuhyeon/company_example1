@@ -4,15 +4,12 @@ import demo.scheduler.domain.UploadedFile;
 import demo.scheduler.dto.common.UploadedFileDto;
 import demo.scheduler.repository.UploadedFileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -59,7 +56,6 @@ public class UploadedFileService {
         return uploadedFile;
 
     }
-
 
     private String makeFolder() {
         String folderPath = "files";
