@@ -7,9 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -30,12 +33,14 @@ public class RequestCreateSchedule {
     private int alertTime;
 
     @NotNull
-    private LocalDate startDateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime startDateTime;
 
     @NotNull
-    private LocalDate endDateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime endDateTime;
 
-    private MultipartFile files;
+    private List<MultipartFile> files;
 
     public ScheduleDto of() {
         return new ScheduleDto
@@ -43,6 +48,7 @@ public class RequestCreateSchedule {
                 .content(content)
                 .repeatUnit(repeatUnit)
                 .alertTime(alertTime)
+                .files(files)
                 .build();
     }
 }

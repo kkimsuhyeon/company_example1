@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
@@ -30,10 +31,10 @@ public class RequestModifySchedule {
     private int alertTime;
 
     @NotNull
-    private LocalDate startDateTime;
+    private LocalDateTime startDateTime;
 
     @NotNull
-    private LocalDate endDateTime;
+    private LocalDateTime endDateTime;
 
     private MultipartFile files;
 

@@ -8,6 +8,8 @@ import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @ToString
@@ -19,9 +21,9 @@ public class ScheduleDto {
     private Color color;
     private RepeatUnit repeatUnit;
     private int alertTime;
-    private LocalDate startDateTime;
-    private LocalDate endDateTime;
-    private MultipartFile files;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+    private List<MultipartFile> files;
 
     public ScheduleDto(Builder builder) {
         this.id = builder.id;
@@ -63,11 +65,11 @@ public class ScheduleDto {
         private Color color;
         private RepeatUnit repeatUnit;
         private int alertTime;
-        private LocalDate startDateTime;
-        private LocalDate endDateTime;
-        private MultipartFile files;
+        private LocalDateTime startDateTime;
+        private LocalDateTime endDateTime;
+        private List<MultipartFile> files;
 
-        public Builder(String title, Color color, LocalDate startDateTime, LocalDate endDateTime) {
+        public Builder(String title, Color color, LocalDateTime startDateTime, LocalDateTime endDateTime) {
             this.title = title;
             this.color = color;
             this.startDateTime = startDateTime;
@@ -94,7 +96,7 @@ public class ScheduleDto {
             return this;
         }
 
-        public Builder files(MultipartFile files) {
+        public Builder files(List<MultipartFile> files) {
             this.files = files;
             return this;
         }

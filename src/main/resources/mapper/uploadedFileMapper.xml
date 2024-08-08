@@ -7,4 +7,10 @@
         VALUES (#{originName}, #{storedName}, #{path}, #{scheduleId})
     </insert>
 
+    <select id="selectFileById" parameterType="Long" resultType="demo.scheduler.domain.UploadedFile">
+        SELECT file_id, origin_name, stored_name, path, schedule_id
+        FROM file
+        WHERE file_id = ${id}
+    </select>
+
 </mapper>

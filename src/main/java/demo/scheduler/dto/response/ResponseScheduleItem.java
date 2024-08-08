@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -21,9 +22,9 @@ public class ResponseScheduleItem {
 
     private Color color;
 
-    private LocalDate startDateTime;
+    private LocalDateTime startDateTime;
 
-    private LocalDate endDateTime;
+    private LocalDateTime endDateTime;
 
     public static ResponseScheduleItem from(ScheduleDto dto) {
         return new ResponseScheduleItem(dto.getId(), dto.getTitle(), dto.getColor(), dto.getStartDateTime(), dto.getEndDateTime());

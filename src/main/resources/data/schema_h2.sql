@@ -9,8 +9,8 @@ CREATE TABLE schedule
     color varchar(50) NOT NULL,
     repeat_unit varchar(50),
     alert_time INTEGER,
-    start_time DATE,
-    end_time DATE,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
     PRIMARY KEY (schedule_id)
  );
 

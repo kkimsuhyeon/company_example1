@@ -5,6 +5,7 @@ import demo.scheduler.dto.request.RequestCreateSchedule;
 import demo.scheduler.dto.request.RequestModifySchedule;
 import demo.scheduler.dto.response.ResponseScheduleDetail;
 import demo.scheduler.dto.response.ResponseScheduleItem;
+import demo.scheduler.dto.schedule.ScheduleWithFile;
 import demo.scheduler.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,8 @@ public class ScheduleController {
 
     @GetMapping(value = "/{scheduleId}")
     public ResponseEntity<?> getSchedule(@PathVariable(value = "scheduleId") Long id) {
-        ScheduleDto schedule = scheduleService.getScheduleById(id);
-        return new ResponseEntity<>(ResponseScheduleDetail.from(schedule), HttpStatus.OK);
+        ScheduleWithFile schedule = scheduleService.getScheduleById(id);
+        return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -46,8 +47,8 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{scheduleId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> modifySchedule(@PathVariable(value = "scheduleId") Long id, @RequestBody @Valid RequestModifySchedule request) {
+    @PutMapping(value = "/{scheduleId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> modifySchedule(@PathVariable(value = "scheduleId") Long id, @ModelAttribute @Valid RequestModifySchedule request) {
         scheduleService.modifySchedule(id, request.of(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,32 +1,27 @@
-package demo.scheduler.domain;
+package demo.scheduler.dto.schedule;
 
 import demo.scheduler.domain.constant.Color;
 import demo.scheduler.domain.constant.RepeatUnit;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
-@Builder
+@AllArgsConstructor
+@ToString
 @Getter
-public class Schedule {
+public class ScheduleWithFile {
 
     private Long id;
-
     private String title;
-
     private String content;
-
     private Color color;
-
     private RepeatUnit repeatUnit;
-
     private int alertTime;
+    private LocalDate startDateTime;
+    private LocalDate endDateTime;
 
-    private LocalDateTime startDateTime;
-
-    private LocalDateTime endDateTime;
-
+    private Long fileId;
+    private String originName;
 }

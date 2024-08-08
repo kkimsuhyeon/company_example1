@@ -3,6 +3,7 @@ package demo.scheduler.service;
 import demo.scheduler.domain.Schedule;
 import demo.scheduler.dto.common.ScheduleDto;
 import demo.scheduler.dto.common.ScheduleFilterDto;
+import demo.scheduler.dto.schedule.ScheduleWithFile;
 import demo.scheduler.repository.ScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     ScheduleMapper scheduleMapper;
+    UploadedFileService uploadedFileService;
 
     @Autowired
-    public ScheduleService(ScheduleMapper scheduleMapper) {
+    public ScheduleService(ScheduleMapper scheduleMapper, UploadedFileService uploadedFileService) {
         this.scheduleMapper = scheduleMapper;
+        this.uploadedFileService = uploadedFileService;
     }
 
     public List<ScheduleDto> getSchedules(Integer month, Integer weekly) {
@@ -32,18 +35,19 @@ public class ScheduleService {
                 .collect(Collectors.toList());
     }
 
-    public ScheduleDto getScheduleById(Long id) {
+    public ScheduleWithFile getScheduleById(Long id) {
         return scheduleMapper.selectScheduleById(id)
-                .map(ScheduleDto::fromEntity)
                 .orElseThrow(() -> new IllegalArgumentException("에러 발생"));
     }
 
     public ScheduleDto createSchedule(ScheduleDto dto) {
 
         Schedule entity = dto.toEntity();
-
         scheduleMapper.insertSchedule(entity);
-        System.out.println(entity.getId());
+
+        if (dto.getFiles() != null) {
+            uploadedFileService.uploadFiles(dto.getFiles(), entity.getId());
+        }
         return dto;
     }
 

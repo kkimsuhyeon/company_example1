@@ -4,23 +4,25 @@
 
     <select id="selectSchedules" resultType="demo.scheduler.domain.Schedule"
             parameterType="demo.scheduler.dto.common.ScheduleFilterDto">
-        SELECT *
+        SELECT schedule_id, title, content, color, repeat_unit, alert_time, start_time, end_time
         FROM schedule
         <where>
             <if test="month != null and month != 0">
-                AND (TO_CHAR(start_time, 'MM') = #{month} OR TO_CHAR(end_time, 'MM') = #{month})
+                AND (TO_NUMBER(TO_CHAR(start_time, 'MM'), '99') <![CDATA[<=]]> #{month} AND TO_NUMBER(TO_CHAR(end_time, 'MM'), '99') <![CDATA[>=]]> #{month})
                 <if test="weekly != null and weekly != 0">
-                    AND (TO_CHAR(start_time, 'IW') = #{weekly} OR TO_CHAR(end_time, 'IW') = #{weekly})
+                    AND EXTRACT(WEEK FROM start_time) <![CDATA[<=]]> #{totalWeekly} AND EXTRACT(WEEK FROM end_time) <![CDATA[>=]]> #{totalWeekly}
                 </if>
             </if>
         </where>
         ORDER BY start_time
     </select>
 
-    <select id="selectScheduleById" resultType="demo.scheduler.domain.Schedule" parameterType="Long">
-        SELECT *
+    <select id="selectScheduleById" resultType="demo.scheduler.dto.schedule.ScheduleWithFile" parameterType="Long">
+        SELECT schedule.schedule_id as id, title, content, color, repeat_unit, alert_time, start_time, end_time, file_id, origin_name, path
         FROM schedule
-        WHERE schedule_id = ${id}
+        LEFT OUTER JOIN file
+        ON schedule.schedule_id = file.schedule_id
+        WHERE schedule.schedule_id = ${id}
     </select>
 
     <insert id="insertSchedule" parameterType="demo.scheduler.domain.Schedule" >

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -28,9 +29,9 @@ public class ResponseScheduleDetail {
 
     private int alertTime;
 
-    private LocalDate startDateTime;
+    private LocalDateTime startDateTime;
 
-    private LocalDate endDateTime;
+    private LocalDateTime endDateTime;
 
     public static ResponseScheduleDetail from(ScheduleDto dto) {
         return new ResponseScheduleDetail(

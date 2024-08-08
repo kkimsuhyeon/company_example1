@@ -7,4 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UploadedFileMapper {
 
     public void insertFile(UploadedFile uploadedFile);
+
+    public UploadedFile selectFileById(Long fileId);
 }
