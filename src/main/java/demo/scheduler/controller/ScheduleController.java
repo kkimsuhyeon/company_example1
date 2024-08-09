@@ -39,18 +39,18 @@ public class ScheduleController {
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createSchedule(
-            @RequestParam @Valid RequestCreateSchedule requestCreateSchedule,
-            @RequestParam(required = false) RequestUploadAttachment requestUploadAttachment) {
+            @ModelAttribute @Valid RequestCreateSchedule requestCreateSchedule,
+            @ModelAttribute RequestUploadAttachment requestUploadAttachment) {
         scheduleService.createSchedule(requestCreateSchedule, requestUploadAttachment);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
 
     @PutMapping(value = "/{scheduleId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> modifySchedule(
             @PathVariable(value = "scheduleId") Long id,
             @ModelAttribute @Valid RequestModifySchedule requestModifySchedule,
             @ModelAttribute RequestUploadAttachment requestUploadAttachment) {
+        
         scheduleService.modifySchedule(id, requestModifySchedule, requestUploadAttachment);
         return new ResponseEntity<>(HttpStatus.OK);
     }

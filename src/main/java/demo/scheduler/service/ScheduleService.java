@@ -44,18 +44,19 @@ public class ScheduleService {
         Schedule dto = requestCreateSchedule.toDto();
         scheduleMapper.insertSchedule(dto);
 
-        if (!requestUploadFile.getFiles().isEmpty()) {
-            attachmentService.uploadAttachment(requestUploadFile, dto.getId());
-        }
+//        if (requestUploadFile.getFiles() != null && !requestUploadFile.getFiles().isEmpty()) {
+//            attachmentService.uploadAttachment(requestUploadFile, dto.getId());
+//        }
     }
 
     public void modifySchedule(Long id, RequestModifySchedule requestModifySchedule, RequestUploadAttachment requestUploadFile) {
         if (!scheduleMapper.selectScheduleById(id).isEmpty()) {
             Schedule dto = requestModifySchedule.toDto(id);
             scheduleMapper.updateSchedule(dto);
-            if (!requestUploadFile.getFiles().isEmpty()) {
-                attachmentService.uploadAttachment(requestUploadFile, dto.getId());
-            }
+
+//            if (requestUploadFile.getFiles() != null && !requestUploadFile.getFiles().isEmpty()) {
+//                attachmentService.uploadAttachment(requestUploadFile, dto.getId());
+//            }
         } else {
             throw new IllegalArgumentException("??");
         }

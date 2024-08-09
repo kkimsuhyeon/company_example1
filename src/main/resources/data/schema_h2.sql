@@ -20,6 +20,6 @@ CREATE TABLE schedule
     origin_name varchar(255) NOT NULL,
     stored_name varchar(255) NOT NULL,
     path varchar(255) NOT NULL,
-    schedule_id INTEGER NOT NULL,
+    schedule_id INTEGER,
     PRIMARY KEY (attachment_id)
  )

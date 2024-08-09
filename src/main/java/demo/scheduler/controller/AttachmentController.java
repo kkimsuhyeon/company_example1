@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/api/attachment")
+@RequestMapping("/api/attachments")
 public class AttachmentController {
 
     private final AttachmentService attachmentService;
