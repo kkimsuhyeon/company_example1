@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -16,11 +17,11 @@ import java.util.UUID;
 @Service
 public class AttachmentService {
 
-    private final AttachmentMapper uploadedFileMapper;
+    private final AttachmentMapper attachmentMapper;
 
     @Autowired
-    public AttachmentService(AttachmentMapper uploadedFileMapper) {
-        this.uploadedFileMapper = uploadedFileMapper;
+    public AttachmentService(AttachmentMapper attachmentMapper) {
+        this.attachmentMapper = attachmentMapper;
     }
 
     public void uploadAttachment(RequestUploadAttachment request, Long scheduleId) {
@@ -29,8 +30,16 @@ public class AttachmentService {
         }
     }
 
-    public Attachment downloadFile(Long fileId) {
-        return uploadedFileMapper.selectAttachmentById(fileId);
+    public Attachment downloadAttachment(Long fileId) {
+        return attachmentMapper.selectAttachmentById(fileId).orElseThrow(() -> new IllegalArgumentException("존재하지 않음"));
+    }
+
+    public void removeAttachment(Long fileId) throws IOException {
+        if (attachmentMapper.selectAttachmentById(fileId).isPresent()) {
+            Attachment attachment = attachmentMapper.selectAttachmentById(fileId).get();
+            deleteFile(attachment.getPath());
+            attachmentMapper.deleteAttachmentById(attachment.getId());
+        }
     }
 
     private void uploadFile(MultipartFile file, Long scheduleId) {
@@ -45,7 +54,7 @@ public class AttachmentService {
             Path savePath = Paths.get(filePath);
             file.transferTo(savePath);
 
-            uploadedFileMapper.insertAttachment(Attachment.builder()
+            attachmentMapper.insertAttachment(Attachment.builder()
                     .originName(originName)
                     .storedName(storedName)
                     .path(filePath)
@@ -55,6 +64,11 @@ public class AttachmentService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void deleteFile(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        Files.delete(path);
     }
 
     private String makeFolder() {

@@ -3,8 +3,8 @@
 <mapper namespace="demo.scheduler.repository.AttachmentMapper">
 
     <insert id="insertAttachment" parameterType="demo.scheduler.dto.common.Attachment">
-        INSERT INTO attachment (origin_name, stored_name, path)
-        VALUES (#{originName}, #{storedName}, #{path})
+        INSERT INTO attachment (origin_name, stored_name, path, schedule_id)
+        VALUES (#{originName}, #{storedName}, #{path}, #{scheduleId})
         <selectKey keyProperty="id" resultType="Long" order="AFTER">
             SELECT MAX(attachment_id) FROM attachment
         </selectKey>
